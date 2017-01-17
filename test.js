@@ -1,3 +1,6 @@
+const NLine = require('./nline');
+const nline = new NLine();
+
 let response = [
   "HTTP/1.1 200 OK",
   "Server: Slang",
@@ -40,25 +43,27 @@ function httpHeaderParser(chunk, line, next) {
   }
 
   if (lastIndex !== (length - 1)) {
-    log("PUSHING BACK");
+    console.log("PUSHING BACK");
     /** @todo: consider copying buffer here */
     line.pushBack(chunk.slice(lastIndex));
   }
 }
 
-// Simple echo server on port 8000
-pipeline(new Tcp(8080))
-  .pipe((chunk, line, next) => {
-    log(chunk.toString('utf8'));
-    next(chunk);
-  })
-  .pipe(httpHeaderParser)
-  .pipe((chunk, line, next) => {
-    log("BODY ->" + chunk.toString('utf8'));
-    //log("HEADER LINE ->" + line.state.httpRequestLine);
-    next(chunk);
-  })
-  .pipe(function (chunk, line, next) {
-    if (line.state.hasHeaders) line.end(response + JSON.stringify(line.state.httpHeaders, null, 2));
-    //line.end(response + "HELLO WORLD!");
-  });
+nline.parallelize(4, () => {
+  // Simple echo server on port 8000
+  nline.pipeline(new NLine.interfaces.TCP(8080))
+    .pipe((chunk, line, next) => {
+      console.log(chunk.toString('utf8'));
+      next(chunk);
+    })
+    .pipe(httpHeaderParser)
+    .pipe((chunk, line, next) => {
+      console.log("BODY ->" + chunk.toString('utf8'));
+      //console.log("HEADER LINE ->" + line.state.httpRequestLine);
+      next(chunk);
+    })
+    .pipe(function (chunk, line, next) {
+      if (line.state.hasHeaders) line.end(response + JSON.stringify(line.state.httpHeaders, null, 2));
+      //line.end(response + "HELLO WORLD!");
+    });
+});
