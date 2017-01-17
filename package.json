@@ -1,0 +1,29 @@
+{
+  "name": "nline",
+  "version": "0.1.0",
+  "description": "A State-machine for reliable concurrent streams.",
+  "main": "nline.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schahriar/nline.git"
+  },
+  "keywords": [
+    "stream",
+    "state",
+    "state-machine",
+    "concurrent",
+    "parallel",
+    "cluster",
+    "reliable",
+    "nline"
+  ],
+  "author": "Schahriar SaffarShargh <info@schahriar.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/schahriar/nline/issues"
+  },
+  "homepage": "https://github.com/schahriar/nline#readme"
+}
