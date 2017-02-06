@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/schahriar/nline.git"
+    "url": "git+https://github.com/schahriar/telecom.git"
   },
   "keywords": [
     "stream",
@@ -23,7 +23,7 @@
   "author": "Schahriar SaffarShargh <info@schahriar.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/schahriar/nline/issues"
+    "url": "https://github.com/schahriar/telecom/issues"
   },
-  "homepage": "https://github.com/schahriar/nline#readme"
+  "homepage": "https://github.com/schahriar/telecom#readme"
 }
