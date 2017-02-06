@@ -1,8 +1,8 @@
 {
-  "name": "nline",
-  "version": "0.1.1",
-  "description": "A State-machine for reliable concurrent streams.",
-  "main": "nline.js",
+  "name": "telecom",
+  "version": "0.1.2",
+  "description": "A reactive framework for bi-directional concurrent streams.",
+  "main": "Telecom.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +18,7 @@
     "parallel",
     "cluster",
     "reliable",
-    "nline"
+    "telecom"
   ],
   "author": "Schahriar SaffarShargh <info@schahriar.com>",
   "license": "MIT",

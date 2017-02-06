@@ -5,18 +5,15 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const Interface = require('./lib/Interface');
 const PipeLine = require('./lib/PipeLine');
+let isParallel = false;
 
-class NLine {
-  constructor() {
-    this.isParallel = false;
-  }
-
-  pipeline(_interface) {
+class Telecom {
+  static pipeline(_interface) {
     return new PipeLine(_interface);
   }
 
-  parallelize(totalForks, handler) {
-    this.isParallel = true;
+  static parallelize(totalForks, handler) {
+    isParallel = true;
     setTimeout(() => {
       if (cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
@@ -43,19 +40,19 @@ class NLine {
 
   static get interfaces() {
     return {
-      TCP: NLineTCPInterface
+      TCP: TelecomTCPInterface
     }
   }
 }
 
-class NLineTCPInterface extends Interface {
+class TelecomTCPInterface extends Interface {
   constructor(port) {
     super();
     this.port = port || 8080;
     this.server = net.createServer((stream) => this.onStream(stream));
-    this.server.on('connection', () => console.log("NLineTCPInterface::CONNECTION ON PORT", this.port));
-    this.server.on('error', (e) => console.log("NLineTCPInterface::SOCKET ERROR", e))
-    this.server.listen(port, () => console.log("NLineTCPInterface::TCP SOCKET ON PORT", this.port));
+    this.server.on('connection', () => console.log("TelecomTCPInterface::CONNECTION ON PORT", this.port));
+    this.server.on('error', (e) => console.log("TelecomTCPInterface::SOCKET ERROR", e))
+    this.server.listen(port, () => console.log("TelecomTCPInterface::TCP SOCKET ON PORT", this.port));
   }
 
   onStream(stream) {
@@ -65,4 +62,4 @@ class NLineTCPInterface extends Interface {
   }
 }
 
-module.exports = NLine;
+module.exports = Telecom;

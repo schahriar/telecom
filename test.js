@@ -1,5 +1,4 @@
-const NLine = require('./nline');
-const nline = new NLine();
+const telecom = require('./telecom');
 
 let response = [
   "HTTP/1.1 200 OK",
@@ -49,9 +48,9 @@ function httpHeaderParser(chunk, line, next) {
   }
 }
 
-nline.parallelize(4, () => {
+telecom.parallelize(4, () => {
   // Simple echo server on port 8000
-  nline.pipeline(new NLine.interfaces.TCP(8080))
+  telecom.pipeline(new telecom.interfaces.TCP(8080))
     .pipe((chunk, line, next) => {
       console.log(chunk.toString('utf8'));
       next(chunk);
