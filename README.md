@@ -147,3 +147,35 @@ telecom.pipeline(new telecom.interfaces.TCP(8000))
 
 ## Lines and State
 Inspired by reactive manifesto, each `Line` owns a state-machine with individual state objects assigned to every processor. States are not share-able across `Lines` or `Processors` as reactive programming is message-driven and for good reasons.
+
+Let's assume we need to count the number of times a stream has input sent to it, by design there are no communication layers or any indication of the current line you may be using but you can make use of simple state objects isolated to a function in order to processes with a context, this state is available to you as `line.state`, here is the counter example using `line.state`:
+
+```javascript
+.pipe((chunk, line, next) => {
+  // Define the counter
+  if (!line.state.counter) line.state.counter = 0;
+
+  // Add to our counter
+  line.state.counter++;
+
+  // End line if the counter has reached 3
+  if (line.state.counter >= 3) return line.end("Received 3 inputs");
+
+  next(chunk);
+})
+```
+
+States are isolated per processor function, therefore the following behavior is expected:
+
+```javascript
+.pipe((chunk, line, next) => {
+  line.state.counter = 4;
+
+  next(chunk);
+}).pipe((chunk, line, next) => {
+  console.log(line.state.counter); // Output: undefined
+})
+```
+
+**Note that states are isolated per processor function and a state MUST always be serializable. A failure within a processor or part of the application must remain recovarable by keeping the state small and serializable.**
+
