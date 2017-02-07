@@ -131,7 +131,7 @@ Now let's put that back together into a working pipeline that:
 telecom.pipeline(new telecom.interfaces.TCP(8000))
       .pipe((chunk, line, next) => {
         console.log("SIZE OF CHUNK", chunk.length);
-        next()
+        next();
       })
       .pipe((chunk, line, next) => {
         if (chunk.length <= 1024) next(chunk);
@@ -142,3 +142,8 @@ telecom.pipeline(new telecom.interfaces.TCP(8000))
         else line.write(chunk);
       });
 ```
+
+-------
+
+## Lines and State
+Inspired by reactive manifesto, each `Line` owns a state-machine with individual state objects assigned to every processor. States are not share-able across `Lines` or `Processors` as reactive programming is message-driven and for good reasons.

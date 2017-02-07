@@ -11,7 +11,10 @@ let response = [
 ].join('\r\n');
 
 function httpHeaderParser(chunk, line, next) {
-  if (line.state.hasHeaders) return next(chunk);
+  if (line.state.hasHeaders) return next({
+    headers: state.httpHeaders,
+    chunk: chunk.slice(i)
+  });
 
   let hasReturn = false;
   let lastIndex = 0;
@@ -24,10 +27,13 @@ function httpHeaderParser(chunk, line, next) {
 
   while (i > 0) {
     i += 2;
-    if (chunk[i-1] !== 0x0A) continue;
+    if (chunk[i - 1] !== 0x0A) continue;
     if (lastIndex >= (i - 2)) {
       state.hasHeaders = true;
-      return next(chunk.slice(i));
+      return next({
+        headers: state.httpHeaders,
+        chunk: chunk.slice(i)
+      });
     }
     if (!state.headerHadRequestLine) {
       state.httpRequestLine = chunk.toString('utf8', lastIndex, i);
@@ -56,13 +62,13 @@ telecom.parallelize(4, () => {
       next(chunk);
     })
     .pipe(httpHeaderParser)
-    .pipe((chunk, line, next) => {
-      console.log("BODY ->" + chunk.toString('utf8'));
+    .pipe((http, line, next) => {
+      console.log("BODY ->" + http.chunk.toString('utf8'));
       //console.log("HEADER LINE ->" + line.state.httpRequestLine);
-      next(chunk);
+      next(http);
     })
-    .pipe(function (chunk, line, next) {
-      if (line.state.hasHeaders) line.end(response + JSON.stringify(line.state.httpHeaders, null, 2));
+    .pipe(function (http, line, next) {
+      if (http.headers) line.end(response + JSON.stringify(http.headers, null, 2));
       //line.end(response + "HELLO WORLD!");
     });
 });
