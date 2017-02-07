@@ -1,6 +1,6 @@
 {
   "name": "telecom",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A reactive framework for bi-directional concurrent streams.",
   "main": "Telecom.js",
   "scripts": {
