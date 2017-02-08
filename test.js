@@ -55,6 +55,7 @@ function httpHeaderParser(chunk, line, next) {
 }
 
 telecom.parallelize(4, () => {
+  console.log("@P1");
   // Simple echo server on port 8000
   telecom.pipeline(new telecom.interfaces.TCP(8080))
     .pipe((chunk, line, next) => {
@@ -71,4 +72,8 @@ telecom.parallelize(4, () => {
       if (http.headers) line.end(response + JSON.stringify(http.headers, null, 2));
       //line.end(response + "HELLO WORLD!");
     });
+});
+
+telecom.parallelize(2, () => {
+  console.log("@P2");
 });
