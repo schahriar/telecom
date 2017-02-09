@@ -179,3 +179,5 @@ States are isolated per processor function, therefore the following behavior is 
 
 **Note that states are isolated per processor function and a state MUST always be serializable. A failure within a processor or part of the application must remain recovarable by keeping the state small and serializable.**
 
+## License
+[MIT license](https://raw.githubusercontent.com/schahriar/telecom/master/LICENSE)

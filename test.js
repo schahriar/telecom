@@ -69,8 +69,12 @@ telecom.parallelize(4, () => {
       next(http);
     })
     .pipe(function (http, line, next) {
+      throw new Error("TEST");
       if (http.headers) line.end(response + JSON.stringify(http.headers, null, 2));
       //line.end(response + "HELLO WORLD!");
+    }).on('error', (error, line) => {
+      line.end("Internal Server Error");
+      console.log({ error });
     });
 });
 
