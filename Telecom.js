@@ -84,16 +84,10 @@ class TelecomTCPInterface extends Interface {
   constructor(port) {
     super();
     this.port = port || 8080;
-    this.server = net.createServer((stream) => this.onStream(stream));
+    this.server = net.createServer((stream) => this.consume(stream));
     this.server.on('connection', () => console.log("TelecomTCPInterface::CONNECTION ON PORT", this.port));
     this.server.on('error', (e) => console.log("TelecomTCPInterface::SOCKET ERROR", e))
     this.server.listen(port, () => console.log("TelecomTCPInterface::TCP SOCKET ON PORT", this.port));
-  }
-
-  onStream(stream) {
-    for (let consumer of this.pool) {
-      consumer(stream);
-    }
   }
 }
 
