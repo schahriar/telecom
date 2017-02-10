@@ -4,7 +4,7 @@
   "description": "A reactive framework for bi-directional concurrent streams.",
   "main": "Telecom.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec test/init.js"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,10 @@
   "bugs": {
     "url": "https://github.com/schahriar/telecom/issues"
   },
-  "homepage": "https://github.com/schahriar/telecom#readme"
+  "homepage": "https://github.com/schahriar/telecom#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
+  }
 }
