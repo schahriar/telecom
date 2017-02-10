@@ -179,5 +179,24 @@ States are isolated per processor function, therefore the following behavior is 
 
 **Note that states are isolated per processor function and a state MUST always be serializable. A failure within a processor or part of the application must remain recovarable by keeping the state small and serializable.**
 
+## Pipeline error handling
+By default, Lines are capable of handling both synchronous and asynchronous error handling. These error will be caught and emitted under the `error` event on the `Pipeline`. You can use `line.throw(...)` to throw an async error.
+
+```javascript
+.pipe((chunk, line, next) => {
+  if (line.state.badHeader) throw new Error("Received Bad Headers");
+  
+  next(chunk);
+}).pipe(chunk, line) => {
+  db.request(..., (error, results) => {
+    if (error) return line.throw(error);
+    // ...
+  });
+}).on('error', (error, line) => {
+  console.error(error);
+  line.end("Internal Server Error");
+});
+```
+
 ## License
 [MIT license](https://raw.githubusercontent.com/schahriar/telecom/master/LICENSE)

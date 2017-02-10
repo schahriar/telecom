@@ -58,6 +58,12 @@ telecom.parallelize(4, () => {
   console.log("@P1");
   // Simple echo server on port 8000
   telecom.pipeline(new telecom.interfaces.TCP(8080))
+    // Connection Timeout
+    .pipe((chunk, line, next) => {
+      line.state.timeout = setTimeout(() => {
+        line.throw(new Error("Connection timeout"));
+      }, 5000);
+    })
     .pipe((chunk, line, next) => {
       console.log(chunk.toString('utf8'));
       next(chunk);
