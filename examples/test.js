@@ -1,4 +1,5 @@
-const telecom = require('./telecom');
+const Telecom = require('../Telecom');
+const telecom = new Telecom();
 
 let response = [
   "HTTP/1.1 200 OK",
@@ -57,12 +58,13 @@ function httpHeaderParser(chunk, line, next) {
 telecom.parallelize(4, () => {
   console.log("@P1");
   // Simple echo server on port 8000
-  telecom.pipeline(new telecom.interfaces.TCP(8080))
+  telecom.pipeline(new Telecom.interfaces.TCP(8080))
     // Connection Timeout
     .pipe((chunk, line, next) => {
       line.state.timeout = setTimeout(() => {
-        line.throw(new Error("Connection timeout"));
-      }, 5000);
+        if (line.open) line.throw(new Error("Connection timeout"));
+      }, 50000);
+      next(chunk);
     })
     .pipe((chunk, line, next) => {
       console.log(chunk.toString('utf8'));
@@ -75,7 +77,6 @@ telecom.parallelize(4, () => {
       next(http);
     })
     .pipe(function (http, line, next) {
-      throw new Error("TEST");
       if (http.headers) line.end(response + JSON.stringify(http.headers, null, 2));
       //line.end(response + "HELLO WORLD!");
     }).on('error', (error, line) => {

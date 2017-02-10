@@ -3,6 +3,10 @@ A reactive framework for bi-directional concurrent streams.
 -------
 [![Build Status](https://travis-ci.org/schahriar/telecom.svg?branch=master)](https://travis-ci.org/schahriar/telecom)
 
+v0.2.0 `----- .-.-.- ..--- .-.-.- -----`
+
+-------
+
 Telecom follows the [reactive manifesto](http://www.reactivemanifesto.org/) in its simplest form by parallelizing and isolating streamlined applications. It allows for creating bi-directional streams (such as TCP, HTTP, or even DOM if you wish) and exposes an isolated state-machine per stream/line.
 
 Unlike RX, Telecom takes a much more minimalistic approach while providing for a different use-case for reactive programming.
@@ -18,12 +22,13 @@ npm install telecom --save
 Start by creating a simple TCP echo server on port 8000 and parallelizing the line (multiple streams) on 4 processes:
 
 ```javascript
-const telecom = require('telecom');
+const Telecom = require('telecom')
+const telecom = new Telecom();
 
 // Parallelize our application on 4 cores
 telecom.parallelize(4, () => {
   // Simple echo server on port 8000
-  telecom.pipeline(new telecom.interfaces.TCP(8000))
+  telecom.pipeline(new Telecom.interfaces.TCP(8000))
        .pipe((chunk, line, next) => {
           if (chunk === null) line.end();
           else line.write(chunk);
@@ -79,7 +84,7 @@ In the previous example we created a stream-processing function that took input 
 
 ```javascript
 // Simple echo server on port 8000
-telecom.pipeline(new telecom.interfaces.TCP(8000))
+telecom.pipeline(new Telecom.interfaces.TCP(8000))
     .pipe((chunk, line, next) => {
       if (chunk === null) line.end();
       else line.write(chunk);
@@ -129,7 +134,7 @@ Now let's put that back together into a working pipeline that:
 
 ```javascript
 // Simple echo server on port 8000
-telecom.pipeline(new telecom.interfaces.TCP(8000))
+telecom.pipeline(new Telecom.interfaces.TCP(8000))
       .pipe((chunk, line, next) => {
         console.log("SIZE OF CHUNK", chunk.length);
         next();

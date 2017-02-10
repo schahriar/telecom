@@ -2,13 +2,16 @@ const vm = require('vm');
 const fs = require('fs');
 const net = require('net');
 const cluster = require('cluster');
+const EventEmitter = require('events').EventEmitter;
 const numCPUs = require('os').cpus().length;
 const Interface = require('./lib/Interface');
 const PipeLine = require('./lib/Pipeline');
+
+/** @todo: Scope this under Telecom Class instance */
+/// ---------------------------------------------- //
 let parallelized = 0,
   pindex = 0,
   pmap = new Map();
-
 // Worker -> Listen for execution notice from Master
 if (cluster.isWorker) {
   console.log(`Worker ${cluster.worker.id} with pid:${process.pid} started`);
@@ -21,13 +24,18 @@ if (cluster.isWorker) {
     }
   });
 }
+/// ---------------------------------------------- //
 
-class Telecom {
-  static pipeline(_interface) {
+class Telecom extends EventEmitter {
+  constructor () {
+    super();
+  }
+
+  pipeline(_interface) {
     return new PipeLine(_interface);
   }
 
-  static parallelize(totalForks, handler) {
+  parallelize(totalForks, handler) {
     setImmediate(() => {
       if (cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
@@ -59,7 +67,7 @@ class Telecom {
     });
   }
 
-  static _distribute(pindex, total) {
+  _distribute(pindex, total) {
     if (cluster.isMaster) {
       let count = 0;
       for (const id in cluster.workers) {
@@ -69,7 +77,7 @@ class Telecom {
     }
   }
 
-  static get isMaster() {
+  get isMaster() {
     return cluster.isMaster;
   }
 
