@@ -1,6 +1,7 @@
 # Telecom
 A reactive framework for bi-directional concurrent streams.
 -------
+[![Build Status](https://travis-ci.org/schahriar/telecom.svg?branch=master)](https://travis-ci.org/schahriar/telecom)
 
 Telecom follows the [reactive manifesto](http://www.reactivemanifesto.org/) in its simplest form by parallelizing and isolating streamlined applications. It allows for creating bi-directional streams (such as TCP, HTTP, or even DOM if you wish) and exposes an isolated state-machine per stream/line.
 
