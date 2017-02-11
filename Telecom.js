@@ -7,28 +7,27 @@ const numCPUs = require('os').cpus().length;
 const Interface = require('./lib/Interface');
 const PipeLine = require('./lib/Pipeline');
 
-/** @todo: Scope this under Telecom Class instance */
-/// ---------------------------------------------- //
-let parallelized = 0,
-  pindex = 0,
-  pmap = new Map();
-// Worker -> Listen for execution notice from Master
-if (cluster.isWorker) {
-  console.log(`Worker ${cluster.worker.id} with pid:${process.pid} started`);
-  process.on('message', (packet) => {
-    if (packet.type === 'process') {
-      // Using setImmediate to defer for registration
-      setImmediate(() => {
-        if (pmap.has(packet.process)) pmap.get(packet.process)();
+class Telecom extends EventEmitter {
+  constructor() {
+    super();
+
+    this.parallelized = 0;
+    this.pindex = 0;
+    this.pmap = new Map();
+
+    if (cluster.isWorker) {
+      console.log(`Worker ${cluster.worker.id} with pid:${process.pid} started`);
+
+      // Worker -> Listen for execution notice from Master
+      process.on('message', (packet) => {
+        if (packet.type === 'process') {
+          // Using setImmediate to defer for registration
+          setImmediate(() => {
+            if (this.pmap.has(packet.process)) this.pmap.get(packet.process)();
+          });
+        }
       });
     }
-  });
-}
-/// ---------------------------------------------- //
-
-class Telecom extends EventEmitter {
-  constructor () {
-    super();
   }
 
   pipeline(_interface) {
@@ -40,30 +39,30 @@ class Telecom extends EventEmitter {
       if (cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
         let i = 0,
-            total = (totalForks || numCPUs),
-            totalProcesses = total;
+          total = (totalForks || numCPUs),
+          totalProcesses = total;
 
         // We already have enough cores running
-        if (parallelized >= totalProcesses) return this._distribute(pindex, total);
+        if (this.parallelized >= totalProcesses) return this._distribute(this.pindex, total);
 
-        // Deduct already parallelized processes from total
-        totalProcesses -= parallelized;
+        // Deduct already this.parallelized processes from total
+        totalProcesses -= this.parallelized;
 
         for (i = 0; i < totalProcesses; i++) {
           const worker = cluster.fork();
           console.log("Fork #" + i + " created");
-          parallelized++;
+          this.parallelized++;
         }
 
         cluster.on('exit', (worker, code, signal) => {
           console.log(`Worker ${worker.process.pid} died`);
         });
 
-        this._distribute(pindex, total);
+        this._distribute(this.pindex, total);
       } else {
-        pmap.set(pindex, handler);
+        this.pmap.set(this.pindex, handler);
       }
-      pindex++;
+      this.pindex++;
     });
   }
 
