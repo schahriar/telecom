@@ -42,4 +42,25 @@ describe("Interface Unit Tests", function () {
     intf.consume(stream);
     expect(c).to.be.equal(streamCount);
   });
+
+  it('should throw errors', function (done) {
+    intf.once('error', (error) => {
+      expect(error).to.be.instanceOf(Error);
+      expect(error).to.have.property('message', 'testError');
+
+      done();
+    });
+
+    intf.throw(new Error('testError'));
+  });
+
+  it('should log debug events', function (done) {
+    intf.once('debug', (l1, l2) => {
+      expect(l1).to.be.equal('@l1');
+      expect(l2).to.be.equal('@l2');
+      done();
+    });
+
+    intf.debug('@l1', '@l2');
+  });
 });
