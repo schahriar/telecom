@@ -82,6 +82,8 @@ telecom.parallelize(4, () => {
     }).on('error', (error, line) => {
       line.end("Internal Server Error");
       console.log({ error });
+    }).on('debug', (...args) => {
+      console.log("DEBUG", ...args);
     });
 });
 

@@ -204,5 +204,13 @@ By default, Lines are capable of handling both synchronous and asynchronous erro
 });
 ```
 
+You can equally log debug events within the interface using:
+
+```javascript
+.on('debug', (...args) => {
+  console.log(...args);
+});
+```
+
 ## License
 [MIT license](https://raw.githubusercontent.com/schahriar/telecom/master/LICENSE)
