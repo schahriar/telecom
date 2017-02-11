@@ -72,7 +72,7 @@ telecom.parallelize(4, () => {
     })
     .pipe(httpHeaderParser)
     .pipe((http, line, next) => {
-      console.log("BODY ->" + http.chunk.toString('utf8'));
+      if (http.chunk) console.log("BODY ->" + http.chunk.toString('utf8'));
       //console.log("HEADER LINE ->" + line.state.httpRequestLine);
       next(http);
     })
