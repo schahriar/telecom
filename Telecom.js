@@ -80,6 +80,10 @@ class Telecom extends EventEmitter {
     return cluster.isMaster;
   }
 
+  get interfaces() {
+    return Telecom.interfaces;
+  }
+
   static get interfaces() {
     return {
       TCP: TelecomTCPInterface
