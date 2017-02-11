@@ -1,10 +1,11 @@
 let PassThrough = require('stream').PassThrough;
 let line;
+let processors = [() => "P1", () => "P2"];
 let stream = new PassThrough();
 
 describe("Line Unit Tests", function () {
   it('should create a new Line', function () {
-    line = new Line(stream, new Map(), 4);
+    line = new Line(stream, new Map());
 
     expect(line).to.have.property("state");
     expect(line).to.have.property("write");
@@ -15,19 +16,20 @@ describe("Line Unit Tests", function () {
   });
 
   it('should get/set state', function () {
+    line._setProcessor(processors[0]);
     line.state.x = 2;
     expect(line.state).to.have.property('x', 2);
   });
 
   it('should switch state as index progresses', function () {
-    line._setState(1);
+    line._setProcessor(processors[1]);
     expect(line.state.x).to.be.undefined;
     line.state.y = true;
     expect(line.state).to.have.property('y', true);
   });
 
   it('should persist state', function () {
-    line._setState(0);
+    line._setProcessor(processors[0]);
     expect(line.state).to.have.property('x', 2);
   });
 
