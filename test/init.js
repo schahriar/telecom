@@ -8,3 +8,4 @@ global.expect = require('chai').expect;
 require('./Interface.unit.js');
 require('./Line.unit.js');
 require('./Pipeline.unit.js');
+require('./Telecom.unit.js');
