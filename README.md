@@ -3,7 +3,9 @@ A reactive framework for bi-directional concurrent streams.
 -------
 [![Build Status](https://travis-ci.org/schahriar/telecom.svg?branch=master)](https://travis-ci.org/schahriar/telecom)
 
-v0.2.0 `----- .-.-.- ..--- .-.-.- -----`
+<!--VERSION_START-->
+v0.2.2 `----- .-.-.- ..--- .-.-.- ..---`
+<!--VERSION_END-->
 
 -------
 
