@@ -48,6 +48,12 @@ class Telecom extends EventEmitter {
     return new PipeLine(_interface);
   }
 
+  /**
+   * Parallelize a function to n number of processes/cores
+   * @method parallelize
+   * @param {Number} totalForks
+   * @param {function} handler - parallelized function
+   */
   parallelize(totalForks, handler) {
     setImmediate(() => {
       if (cluster.isMaster) {
@@ -94,6 +100,9 @@ class Telecom extends EventEmitter {
     return cluster.isMaster;
   }
 
+  /**
+   * @property {object} interfaces
+   */
   get interfaces() {
     return Telecom.interfaces;
   }
