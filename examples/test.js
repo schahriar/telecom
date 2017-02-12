@@ -61,6 +61,7 @@ telecom.parallelize(4, () => {
   telecom.pipeline(new Telecom.interfaces.TCP(8080))
     // Connection Timeout
     .pipe((chunk, line, next) => {
+      if (chunk === null) return; // Stream has ended
       line.state.timeout = setTimeout(() => {
         if (line.open) line.throw(new Error("Connection timeout"));
       }, 50000);

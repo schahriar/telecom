@@ -7,6 +7,15 @@ const numCPUs = require('os').cpus().length;
 const Interface = require('./lib/Interface');
 const PipeLine = require('./lib/Pipeline');
 
+/**
+ * Telecom Interface with a consumer pool for handling concurrent i/o streams
+ * @typedef {Interface} Interface
+ */
+
+/**
+ * Creates a new Telecom instance
+ * @class Telecom
+ */
 class Telecom extends EventEmitter {
   constructor() {
     super();
@@ -30,6 +39,11 @@ class Telecom extends EventEmitter {
     }
   }
 
+  /**
+   * @method pipeline
+   * @param {Interface} interface
+   * @returns {Pipeline}
+   */
   pipeline(_interface) {
     return new PipeLine(_interface);
   }
