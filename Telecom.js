@@ -57,7 +57,7 @@ class Telecom extends EventEmitter {
   parallelize(totalForks, handler) {
     setImmediate(() => {
       if (cluster.isMaster) {
-        console.log(`Master ${process.pid} is running`);
+        //console.log(`Master ${process.pid} is running`);
         let i = 0,
           total = (totalForks || numCPUs),
           totalProcesses = total;
@@ -70,10 +70,11 @@ class Telecom extends EventEmitter {
 
         for (i = 0; i < totalProcesses; i++) {
           const worker = cluster.fork();
-          console.log("Fork #" + i + " created");
+          //console.log("Fork #" + i + " created");
           this.parallelized++;
         }
 
+        /** @todo: add recovery logic for failed workers */
         cluster.on('exit', (worker, code, signal) => {
           console.log(`Worker ${worker.process.pid} died`);
         });

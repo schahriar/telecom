@@ -5,7 +5,7 @@ let stream = new PassThrough();
 
 describe("Line Unit Tests", function () {
   it('should create a new Line', function () {
-    line = new Line(stream, new Map());
+    line = new Line(stream, { test: true });
 
     expect(line).to.have.property("state");
     expect(line).to.have.property("write");
@@ -40,6 +40,19 @@ describe("Line Unit Tests", function () {
     });
 
     line.write('test');
+  });
+
+  it('should support pushBack in a stream', function (done) {
+    stream.once('data', (chunk) => {
+      line.pushBack(chunk);
+
+      expect(chunk.toString('utf8')).to.be.equal('test2');
+      expect(line._hasPushedBackChunks()).to.be.true;
+      expect(line._getPushedBackChunks().toString('utf8')).to.be.equal('test2');
+      done();
+    });
+
+    line.write('test2');
   });
 
   it('should end a stream', function (done) {
