@@ -48,10 +48,16 @@ class Telecom extends EventEmitter {
     return new PipeLine(_interface);
   }
 
+  /**
+   * Parallelize a function to n number of processes/cores
+   * @method parallelize
+   * @param {Number} totalForks
+   * @param {function} handler - parallelized function
+   */
   parallelize(totalForks, handler) {
     setImmediate(() => {
       if (cluster.isMaster) {
-        console.log(`Master ${process.pid} is running`);
+        //console.log(`Master ${process.pid} is running`);
         let i = 0,
           total = (totalForks || numCPUs),
           totalProcesses = total;
@@ -64,12 +70,19 @@ class Telecom extends EventEmitter {
 
         for (i = 0; i < totalProcesses; i++) {
           const worker = cluster.fork();
-          console.log("Fork #" + i + " created");
+          worker._telecom_meta = { plist: [] };
+          //console.log("Fork #" + i + " created");
           this.parallelized++;
         }
 
         cluster.on('exit', (worker, code, signal) => {
-          console.log(`Worker ${worker.process.pid} died`);
+          const plist = worker._telecom_meta.plist;
+          const recovered_worker = cluster.fork();
+          console.log(`Worker ${worker.id} died, restarting indices ${plist}`);
+          for (let i = 0; i < plist.length; i++) {
+            recovered_worker.send({ process: plist[i], type: 'process' });
+          }
+          recovered_worker._telecom_meta = { plist };
         });
 
         this._distribute(this.pindex, total);
@@ -85,6 +98,8 @@ class Telecom extends EventEmitter {
       let count = 0;
       for (const id in cluster.workers) {
         if (count++ >= total) return;
+        // Assign metadata including pindex to worker
+        cluster.workers[id]._telecom_meta.plist.push(pindex);
         cluster.workers[id].send({ process: pindex, type: 'process' });
       }
     }
@@ -94,6 +109,9 @@ class Telecom extends EventEmitter {
     return cluster.isMaster;
   }
 
+  /**
+   * @property {object} interfaces
+   */
   get interfaces() {
     return Telecom.interfaces;
   }
