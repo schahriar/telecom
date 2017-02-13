@@ -187,6 +187,21 @@ States are isolated per processor function, therefore the following behavior is 
 
 **Note that states are isolated per processor function and a state MUST always be serializable. A failure within a processor or part of the application must remain recovarable by keeping the state small and serializable.**
 
+### Buffering chunks to be reprocessed
+
+Byte buffer chunks can be pushed back to the stream (buffered) using the `line.pushBack` method. If a processor is not ready to process a specific chunk or parts of the chunk it can pushBack that buffer to be added to the upcoming chunk in the stream.
+
+```javascript
+.pipe((chunk, line, next) => {
+  if (!line.state.headerEnd) {
+    if (chunk.indexOf('\n') === -1) return line.pushBack(chunk);
+    // process ...
+  } else {
+    next(chunk);
+  }
+});
+```
+
 ## Pipeline error handling
 By default, Lines are capable of handling both synchronous and asynchronous error handling. These error will be caught and emitted under the `error` event on the `Pipeline`. You can use `line.throw(...)` to throw an async error.
 
