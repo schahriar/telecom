@@ -10,6 +10,9 @@
 <dt><a href="#debug">debug()</a></dt>
 <dd><p>Log a debug event to pipeline</p>
 </dd>
+<dt><a href="#concat">concat()</a> ⇒ <code>function</code></dt>
+<dd><p>Required function to cover Line#pushBack method, concatenates n number of chunks together</p>
+</dd>
 </dl>
 
 <a name="Interface"></a>
@@ -50,4 +53,15 @@ Log a debug event to pipeline
 | Type | Description |
 | --- | --- |
 | <code>args</code> | debug arguments |
+
+<a name="concat"></a>
+
+## concat() ⇒ <code>function</code>
+Required function to cover Line#pushBack method, concatenates n number of chunks together
+
+**Kind**: global function  
+
+| Type |
+| --- |
+| <code>chucks</code> | 
 

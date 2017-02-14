@@ -1,11 +1,13 @@
 const vm = require('vm');
 const fs = require('fs');
-const net = require('net');
 const cluster = require('cluster');
 const EventEmitter = require('events').EventEmitter;
 const numCPUs = require('os').cpus().length;
 const Interface = require('./lib/Interface');
 const PipeLine = require('./lib/Pipeline');
+
+// Interfaces
+const TelecomTCPInterface = require('./lib/interfaces/TCP');
 
 /**
  * Telecom Interface with a consumer pool for handling concurrent i/o streams
@@ -120,17 +122,6 @@ class Telecom extends EventEmitter {
     return {
       TCP: TelecomTCPInterface
     }
-  }
-}
-
-class TelecomTCPInterface extends Interface {
-  constructor(port) {
-    super();
-    this.port = port || 8080;
-    this.server = net.createServer((stream) => this.consume(stream));
-    this.server.on('connection', () => this.debug("TelecomTCPInterface::CONNECTION ON PORT", this.port));
-    this.server.on('error', (error) => this.throw(new Error(error), 'TelecomTCPInterface'));
-    this.server.listen(port, () => this.debug("TelecomTCPInterface::TCP SOCKET ON PORT", this.port));
   }
 }
 
