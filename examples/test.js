@@ -69,6 +69,10 @@ telecom.parallelize(4, () => {
     })
     .pipe((chunk, line, next) => {
       console.log(chunk.toString('utf8'));
+      if (!line.state.first) {
+        line.state.first = true;
+        return line.pushBack(chunk);
+      }
       next(chunk);
     })
     .pipe(httpHeaderParser)
