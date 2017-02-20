@@ -67,14 +67,6 @@ telecom.parallelize(4, () => {
       }, 50000);
       next(chunk);
     })
-    .pipe((chunk, line, next) => {
-      console.log(chunk.toString('utf8'));
-      if (!line.state.first) {
-        line.state.first = true;
-        return line.pushBack(chunk);
-      }
-      next(chunk);
-    })
     .pipe(httpHeaderParser)
     .pipe((http, line, next) => {
       if (http.chunk) console.log("BODY ->" + http.chunk.toString('utf8'));

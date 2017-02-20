@@ -5,7 +5,8 @@ let stream = new PassThrough();
 
 describe("Line Unit Tests", function () {
   it('should create a new Line', function () {
-    line = new Line(stream, { test: true });
+    line = new Line({ test: true });
+    line.pipe(stream);
 
     expect(line).to.have.property("state");
     expect(line).to.have.property("write");
