@@ -62,18 +62,10 @@ telecom.parallelize(4, () => {
     // Connection Timeout
     .pipe((chunk, line, next) => {
       if (chunk === null) return; // Stream has ended
+      if (chunk !== line.OPEN) return next(chunk); // Ignore after Connection has been opened
       line.state.timeout = setTimeout(() => {
         if (line.open) line.throw(new Error("Connection timeout"));
       }, 50000);
-      next(chunk);
-    })
-    .pipe((chunk, line, next) => {
-      console.log(chunk.toString('utf8'));
-      if (!line.state.first) {
-        line.state.first = true;
-        return line.pushBack(chunk);
-      }
-      next(chunk);
     })
     .pipe(httpHeaderParser)
     .pipe((http, line, next) => {
