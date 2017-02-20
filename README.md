@@ -32,6 +32,7 @@ telecom.parallelize(4, () => {
   // Simple echo server on port 8000
   telecom.pipeline(new Telecom.interfaces.TCP(8000))
        .pipe((chunk, line, next) => {
+          if (chunk === line.OPEN) return; // Ignore opened constant
           if (chunk === null) line.end();
           else line.write(chunk);
           
@@ -88,6 +89,7 @@ In the previous example we created a stream-processing function that took input 
 // Simple echo server on port 8000
 telecom.pipeline(new Telecom.interfaces.TCP(8000))
     .pipe((chunk, line, next) => {
+      if (chunk === line.OPEN) return; // Ignore opened constant
       if (chunk === null) line.end();
       else line.write(chunk);
 
@@ -95,7 +97,7 @@ telecom.pipeline(new Telecom.interfaces.TCP(8000))
     });
 ```
 
-Our stream-processing function within the pipe always receives the input as the first argument.
+Our stream-processing function within the pipe always receives the input as the first argument **and a Symbol constant equal to `line.OPEN` when a stream has opened.**
 
 **An Input within a stream can be of any type but only a single input/output is allowed within the stream. The type can be transformed within the stream through processing. For example an HTTP processor can transform a Byte input into a request object passed down within the stream**
 
@@ -138,6 +140,7 @@ Now let's put that back together into a working pipeline that:
 // Simple echo server on port 8000
 telecom.pipeline(new Telecom.interfaces.TCP(8000))
       .pipe((chunk, line, next) => {
+        if (chunk === line.OPEN) return; // Ignore opened constant
         console.log("SIZE OF CHUNK", chunk.length);
         next();
       })
