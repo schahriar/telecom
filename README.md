@@ -192,12 +192,12 @@ States are isolated per processor function, therefore the following behavior is 
 
 ### Buffering chunks to be reprocessed
 
-Byte buffer chunks can be pushed back to the stream (buffered) using the `line.pushBack` method. If a processor is not ready to process a specific chunk or parts of the chunk it can pushBack that buffer to be added to the upcoming chunk in the stream.
+Byte buffer chunks can be pushed back to the stream (buffered) using the `line.unshift` method. If a processor is not ready to process a specific chunk or parts of the chunk it can unshift that buffer to be added to the upcoming chunk in the stream.
 
 ```javascript
 .pipe((chunk, line, next) => {
   if (!line.state.headerEnd) {
-    if (chunk.indexOf('\n') === -1) return line.pushBack(chunk);
+    if (chunk.indexOf('\n') === -1) return line.unshift(chunk);
     // process ...
   } else {
     next(chunk);

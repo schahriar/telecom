@@ -51,7 +51,7 @@ function httpHeaderParser(chunk, line, next) {
   if (lastIndex !== (length - 1)) {
     console.log("PUSHING BACK");
     /** @todo: consider copying buffer here */
-    line.pushBack(chunk.slice(lastIndex));
+    line.unshift(chunk.slice(lastIndex));
   }
 }
 

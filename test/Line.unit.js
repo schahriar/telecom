@@ -13,7 +13,7 @@ describe("Line Unit Tests", function () {
     expect(line).to.have.property("end");
     expect(line).to.have.property("throw");
     expect(line).to.have.property("catch");
-    expect(line).to.have.property("pushBack");
+    expect(line).to.have.property("unshift");
   });
 
   it('should get/set state', function () {
@@ -43,9 +43,9 @@ describe("Line Unit Tests", function () {
     line.write('test');
   });
 
-  it('should support pushBack in a stream', function (done) {
+  it('should support unshift in a stream', function (done) {
     stream.once('data', (chunk) => {
-      line.pushBack(chunk);
+      line.unshift(chunk);
 
       expect(chunk.toString('utf8')).to.be.equal('test2');
       expect(line._hasPushedBackChunks()).to.be.true;
