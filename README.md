@@ -1,4 +1,4 @@
-# Telecom
+# ![Telecom](./logo.png)
 A reactive framework for bi-directional concurrent streams.
 -------
 [![Build Status](https://travis-ci.org/schahriar/telecom.svg?branch=master)](https://travis-ci.org/schahriar/telecom)
