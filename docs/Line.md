@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#pushBack">pushBack(chunk)</a></dt>
+<dt><a href="#unshift">unshift(chunk)</a></dt>
 <dd><p>Push a chunk of any type back to the stream
 effectively buffering and concatenating to the
 next chunk</p>
@@ -28,6 +28,11 @@ next chunk</p>
 
 ## Line
 **Kind**: global class  
+
+* [Line](#Line)
+    * [.state](#Line+state)
+    * [.OPEN](#Line+OPEN) ⇒ <code>Symbol</code>
+
 <a name="Line+state"></a>
 
 ### line.state
@@ -40,9 +45,16 @@ Line state scoped to current processor
 | --- | --- |
 | state | <code>Object</code> | 
 
-<a name="pushBack"></a>
+<a name="Line+OPEN"></a>
 
-## pushBack(chunk)
+### line.OPEN ⇒ <code>Symbol</code>
+JS Symbol passed when a stream has opened
+
+**Kind**: instance property of <code>[Line](#Line)</code>  
+**Returns**: <code>Symbol</code> - kOpen  
+<a name="unshift"></a>
+
+## unshift(chunk)
 Push a chunk of any type back to the stream
 effectively buffering and concatenating to the
 next chunk
